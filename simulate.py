@@ -1,66 +1,96 @@
-#  simulate.py
+import json 
 import main
 import players
-import itertools
-from collections import defaultdict
 
-def simulate_game(player1, player2):
-    # Initialize the game
-    game = main.TicTacToeGame(3, True)
-    player1.game = game
-    player2.game = game
+class TicTacToeSimulator:
+    def __init__(self, grid_size=3, num_episodes=100):
+        self.grid_size = grid_size
+        self.num_episodes = num_episodes
+        self.player_classes = {
+            'AI_Jack': players.AI_Jack,
+            'AI_MCTS': players.AI_MCTS,
+            'AI_Rando': players.AI_Rando,
+        }
+        self.results = {'X': 0, 'O': 0, 'Draw': 0}
 
-    # Main game loop
-    while not game.is_draw():
-        if game.current_player == 'X':
-            move = player1(game)
-        else:
-            move = player2(game)
+    def display_menu(self):
+        print('Tic-Tac-Toe AI vs AI Simulator')
+        print('--------------------------------')
+        print(f'Available AI Players: ')
+        for idx, player in enumerate(self.player_classes.keys(), start=1):
+            print(f'{idx}. {player}')
+        print('')
+        
+    def get_episodes(self, prompt):
+        while True:
+            try:
+                choice = int(input(prompt))
+                if 1 <= choice <= 10000: # arbitrary limit of simulation episodes
+                    break
+                else:
+                    print('Invalid choice. Please choose a valid option.')
+            except ValueError:
+                print('Invalid input. Please enter a number.')
+        return choice
 
-        game.move(move, game.current_player)
+    def get_player_assignment(self, prompt):
+        while True:
+            try:
+                choice = int(input(prompt))
+                if 1 <= choice <= len(self.player_classes):
+                    break
+                else:
+                    print('Invalid choice. Please choose a valid option.')
+            except ValueError:
+                print('Invalid input. Please enter a number.')
+        return choice
 
-    # Return the game outcome
-    if game.is_draw():
-        return 'Draw'
-    else:
-        return game.winner
+    def run_simulation(self):
+        self.display_menu()
+        episodes_choice = self.get_episodes(f'Enter the number of episodes to run: ')
+        if episodes_choice != self.num_episodes:
+            self.num_episodes = episodes_choice
+        x_choice = self.get_player_assignment('Choose the AI player for X (enter the corresponding number): ')
+        o_choice = self.get_player_assignment('Choose the AI player for O (enter the corresponding number): ')
+        x_player_class = self.player_classes[list(self.player_classes.keys())[x_choice - 1]]
+        o_player_class = self.player_classes[list(self.player_classes.keys())[o_choice - 1]]
+        for episode in range(self.num_episodes):
+            viewer = main.Simulation_Viewer(main.TicTacToeGame)
+            game = main.TicTacToeGame(grid_size=self.grid_size, simulation=True)
+            x_player = x_player_class('X', 'X', viewer, game)
+            o_player = o_player_class('O', 'O', viewer, game)
+            result = game.play_game(x_player, o_player, viewer)
+            self.results[result] += 1
+        new_results = self.return_results(x_player_class, o_player_class)
+        print(new_results)
+        simulator.save_results_as_json(new_results)
 
-def run_simulations(player1, player2, num_simulations):
-    results = defaultdict(int)
-    for _ in range(num_simulations):
-        outcome = simulate_game(player1, player2)
-        results[outcome] += 1
-    return results
+    def return_results(self, x_player_class, o_player_class):
+        return (f'Result: Player X ({x_player_class.__name__}) wins: {self.results["X"]}, ' + 
+              f'vs. Player O ({o_player_class.__name__}) wins: {self.results["O"]}, Draws: {self.results["Draw"]}')
 
-view = None
-def assign_viewer(game):
-    view = game.view
-    
-player_combinations = [
-    (players.AI_Jack("Jack-X", "X", view, None), players.AI_Jack("Jack-O", "O", view, None)),
-    (players.AI_MCTS("MCTS-X", "X", view, None), players.AI_MCTS("MCTS-O", "O", view, None)),
-    (players.AI_Rando("Rando-X", "X", view, None), players.AI_Rando("Rando-O", "O", view, None))
-]
+    def save_results_as_json(self, results):
+        results_file = 'results.json'
+        # First, if there are existing results in the json file, tabulate them
+        try:
+            with open(results_file, 'r') as f:
+                existing_results = json.load(f) # existing_results is a dictionary
+        except FileNotFoundError:
+            existing_results = {}  # if there is no existing json file, create an empty dictionary
+        # Second, integrate the new results into the json file  
+        new_results = results.split(': ')
+        new_results = new_results[1].split(', ')
+        for result in new_results:
+            result = result.split(' ')
+            if result[0] in existing_results:
+                existing_results[result[0]] += int(result[1])
+            else:
+                existing_results[result[0]] = int(result[1])
+        # Third, save the new results to the json file
+        with open(results_file, 'w') as f:
+            json.dump(existing_results, f, indent=4) # indent=4 for readability
 
-num_simulations = 10  # Number of simulations to run for each player combination
 
-# Run simulations for all possible player combinations
-for player1, player2 in itertools.product(player_combinations, repeat=2):
-    results = run_simulations(player1[0], player2[1], num_simulations)
-    print(f"{player1[0].name} vs {player2[1].name}: {results}")
-
-    
-# player_list = [
-#     (players.AI_Jack("Jack-X", "X", view, None), players.AI_Jack("Jack-O", "O", view, None)),
-#     (players.AI_MCTS("MCTS-X", "X", view, None), players.AI_MCTS("MCTS-O", "O", view, None)),
-#     (players.AI_Rando("Rando-X", "X", view, None), players.AI_Rando("Rando-O", "O", view, None))
-# ]
-
-# num_simulations = 10  # Number of simulations to run for each player combination
-# results = defaultdict(int)
-
-# # Run simulations for all possible player combinations
-# for (player1_X, player1_O), (player2_X, player2_O) in itertools.product(player_list, repeat=2):
-#     run_simulations(player1_X, player2_O, num_simulations, results)
-#     print(f"{player1_X.name} vs {player2_O.name}: {results}")
-#     results.clear()
+if __name__ == '__main__':
+    simulator = TicTacToeSimulator()
+    simulator.run_simulation()

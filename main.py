@@ -22,25 +22,23 @@ class BaseViewer:
     def __call__(self) -> None:
         raise NotImplementedError('Subclasses must implement this method')
     
-    @staticmethod
-    def message(message) -> None:
-        print(message)
-        
     def ask_to_continue(self) -> bool:
         return True
 
     
 class Console_Viewer(BaseViewer):
+    def __init__(self, game) -> None:
+        self.game = game
+        
     def __call__(self) -> None:
         print()
         print(self.game) 
     
     def ask_for_move(self, player) -> int:
         while True:
-            cell_input = input(f'{player} - Enter the cell number for your next move '
-                   f'{self.game.get_valid_moves()} or "q" to quit: ')
+            cell_input = input(f'{player} - Enter the cell number for your next move [{self.game.get_valid_moves()}] or "q" to quit: ')
             if cell_input == 'q':
-                self.game.quit_game()
+                self.game.quit_game(game)
                 break
             try:
                 cell = int(cell_input)
@@ -62,7 +60,11 @@ class Console_Viewer(BaseViewer):
             else:
                 self.message('Invalid input, try again')
                 continue
-            
+    
+    @staticmethod
+    def message(message) -> None:
+        print(message)
+                
             
 class Simulation_Viewer(BaseViewer):
     def __call__(self) -> None:
@@ -71,8 +73,11 @@ class Simulation_Viewer(BaseViewer):
     def ask_to_continue(self) -> bool:
         return True
     
-    def update(self) -> None:
-        print(self.game.simulation_update)
+    def message(self, message) -> None:
+        pass
+    
+    def update(self, message) -> None:
+        print(message)
 
 
 class TicTacToeGame:    
@@ -82,12 +87,17 @@ class TicTacToeGame:
     its strategic value; for use by AIs.
     '''
     def __init__(self, grid_size: int, simulation: bool) -> None:
-        self.view = Console_Viewer(self)
+        self.AI_ONLY_MODE = not simulation
+        self.conclusion = str
         self.grid_size = grid_size
+        self.score_matrix = self._generate_score_matrix(grid_size)
         self.board = self._generate_board()
         self.current_player = 'X' #  First player is X
-        self.score_matrix = self._generate_score_matrix(grid_size)
         self.simulation = simulation
+        if simulation:
+            self.view = Simulation_Viewer(self)
+        else:
+            self.view = Console_Viewer(self)
         
     def __str__(self) -> str:
         board_with_labels = [[f'{(row_idx * self.grid_size) + col_idx + 1:3d}' if cell == ' ' else f'{cell:^3s}' for col_idx, cell in enumerate(row)] for row_idx, row in enumerate(self.board)]
@@ -192,21 +202,15 @@ class TicTacToeGame:
             return True
         return False
     
-    def play_game(self, p1, p2, viewer) -> None:
+    def play_game(self, p1, p2, viewer) -> str:
         '''
         The Tic-Tac-Toe game loop.
         '''
-        # Simulation parameters:
-        episode = 0
-        win_x = 0
-        win_o = 0
-        draw = 0
-        
-        if AI_ONLY_MODE:
+        if self.AI_ONLY_MODE:
             pause = TURN_PAUSE 
         else:
             pause = 0
-            
+                      
         turn = 0
         while turn < self.grid_size ** 2:
             if self.current_player == 'X': 
@@ -218,38 +222,31 @@ class TicTacToeGame:
                 sleep(pause) 
                 move = p2(self)
                 player_id = p2.name
-            print(f"turn {turn + 1}: Player {self.current_player} ({player_id}) played {move}")
+            viewer.message(f"turn {turn + 1}: Player {self.current_player} ({player_id}) played {move}")
             valid_move = self.move(move, self.current_player)
             if valid_move:
                 turn += 1
                 viewer()
                 if self.is_winner('X'):
                     viewer.message(f'{self.current_player} ({p1.name}) wins!')
+                    conclusion = 'X'
                 elif self.is_winner('O'):
                     viewer.message(f'{self.current_player} ({p2.name}) wins!')
+                    conclusion = 'O'
                 elif self.is_draw():
                     viewer.message('Draw!')
+                    conclusion = 'Draw'
             if self.is_winner('X') or self.is_winner('O') or self.is_draw():
                 break   
-            
+                 
         if not self.simulation:
             continue_playing = viewer.ask_to_continue()
             if not continue_playing:
                 self.quit_game()
-        elif self.simulation:
-            update = str
-            if self.is_winner('X'):
-                win_x += 1
-                update = str(f'{self.current_player} ({p1.name}) wins! [Totals, epidsode: {episode}, X: {win_x}, O: {win_o}, Draw: {draw}]')
-            elif self.is_winner('O'): 
-                win_o += 1   
-                update = str(f'{self.current_player} ({p2.name}) wins! [Totals, epidsode: {episode}, X: {win_x}, O: {win_o}, Draw: {draw}]')
-            elif self.is_draw():
-                draw += 1
-                update = str('Draw! [Totals, epidsode: {episode}, X: {win_x}, O: {win_o}, Draw: {draw}]')
-            self.view.simulation_update(update)
+
         self.board = self._generate_board()
         self.current_player = 'X'    
+        return conclusion
 
     def quit_game(self) -> None:
         print("Quitting the game...")
@@ -268,6 +265,7 @@ if __name__ == '__main__':
     GRID_SIZE = 3
 
     #  Setup a generic Tic-Tac-Toe game on the console:
+    this_viewer = Console_Viewer(TicTacToeGame)  
     game = TicTacToeGame(GRID_SIZE, simulation=False)
     this_viewer = Console_Viewer(game)
     
@@ -292,17 +290,14 @@ if __name__ == '__main__':
                             '\n\tq. Quit')
         
         mode = input("Select a play mode or enter 'q' to quit: ")
+        AI_ONLY_MODE = False
         if bool(mode.strip() == '1'): #  play Human vs AI_Rando
-            AI_ONLY_MODE = False
             game.play_game(Human('Human', 'X', this_viewer, game), AI_Rando('AI_Rando', 'O', this_viewer, game), this_viewer) 
         elif bool(mode.strip() == '2'):   #  play Human vs AI_MCTS
-            AI_ONLY_MODE = False
             game.play_game(Human('Human', 'X', this_viewer, game), AI_MCTS('AI_MCTS', 'O', this_viewer, game), this_viewer)
         elif bool(mode.strip() == '3'): #  play Human vs AI_Jack
-            AI_ONLY_MODE = False
             game.play_game(Human('Human', 'X', this_viewer, game), AI_Jack('AI_Jack', 'O', this_viewer, game), this_viewer)       
         elif bool(mode.strip() == '4'): #  play AI_Jack vs Human
-            AI_ONLY_MODE = False
             game.play_game(AI_Jack('AI_Jack', 'X', this_viewer, game), Human('Human', 'O', this_viewer, game), this_viewer) 
         elif bool(mode.strip() == '5'): #  play AI_Rando vs AI_Jack
             AI_ONLY_MODE = True
