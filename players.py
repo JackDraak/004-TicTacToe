@@ -1,4 +1,4 @@
-# players.py - BasePlayer, Human, AI_Jack, AI_MCTS, AI_Rando...
+# players.py - BasePlayer, Human, AI_Jack, AI_MCTS, AI_Rando...TBD: AI_ML_SVM, AI_ML_NN, or AI_ML_RL
 import math
 import random
 
@@ -87,19 +87,17 @@ class AI_Jack(BasePlayer):
 
 
 class AI_MCTS(BasePlayer):
-    def __init__(self, player_ID, player_symbol, viewer, game, exploration_param=1.4, max_iterations=4000):
+    def __init__(self, player_ID, player_symbol, viewer, game, exploration_param=1.4, max_iterations=500):
         super().__init__(player_ID, player_symbol, viewer, game)
         self.exploration_param = exploration_param
         self.max_iterations = max_iterations
 
     def __call__(self, game):
         self.root = Node(game)
-        
         for _ in range(self.max_iterations):
             selected_node = self.tree_policy(self.root)
             result = selected_node.rollout()
             selected_node.backpropagate(result)
-
         best_child_node = self.root.best_child(0)  # exploitation only
         if best_child_node is not None:
             game.message(f'AI_MCTS: I\'ve calculated my move, taking {best_child_node.move}!')
@@ -131,7 +129,7 @@ class AI_Rando(BasePlayer):
                     'AI_Rando: Thinking... thinking... I\'ll claim cell ' + str(move) + '! ',
                     'AI_Rando: Thinking... I\'ll claim cell ' + str(move) + '! ',
                     'AI_Rando: I\'ll claim cell ' + str(move) + '!', 
-                    'AI_Rando: I\'ve got it, taking ' + str(move) + '! ',]
+                    'AI_Rando: I\'ve got it, taking cell ' + str(move) + '! ',]
         game.message(random.choice(comments))
         return move
     

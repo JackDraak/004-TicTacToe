@@ -1,4 +1,4 @@
-# plotter.py -  Plotter class to graph the results of the simulations.
+# plotter.py -  Plotter class to graph the tabulated results of the simulations.
 import json
 import matplotlib.pyplot as plt
 import numpy as np

@@ -1,22 +1,56 @@
 {
+    "AI_Rando(X) vs. AI_Rando(O)": {
+        "X": 5825,
+        "O": 2885,
+        "Draw": 1290,
+        "Time": 0.000387
+    },
+    "AI_Rando(X) vs. AI_Jack(O)": {
+        "X": 115,
+        "O": 8473,
+        "Draw": 1412,
+        "Time": 0.000429
+    },
+    "AI_Rando(X) vs. AI_MCTS(O)": {
+        "X": 10,
+        "O": 0,
+        "Draw": 0,
+        "Time": 0.263983
+    },
+    "AI_MCTS(X) vs. AI_Rando(O)": {
+        "X": 1,
+        "O": 9,
+        "Draw": 0,
+        "Time": 0.337948
+    },
+    "AI_MCTS(X) vs. AI_Jack(O)": {
+        "X": 0,
+        "O": 10,
+        "Draw": 0,
+        "Time": 0.29974
+    },
+    "AI_MCTS(X) vs. AI_MCTS(O)": {
+        "X": 5,
+        "O": 0,
+        "Draw": 5,
+        "Time": 0.749766
+    },
+    "AI_Jack(X) vs. AI_Rando(O)": {
+        "X": 9633,
+        "O": 0,
+        "Draw": 367,
+        "Time": 0.000383
+    },
     "AI_Jack(X) vs. AI_Jack(O)": {
         "X": 0,
         "O": 0,
-        "Draw": 10000
+        "Draw": 20104,
+        "Time": 0.001451
     },
-    "AI_Rando(X) vs. AI_Jack(O)": {
-        "X": 118,
-        "O": 8453,
-        "Draw": 1429
-    },
-    "AI_Jack(X) vs. AI_Rando(O)": {
-        "X": 9628,
+    "AI_Jack(X) vs. AI_MCTS(O)": {
+        "X": 10,
         "O": 0,
-        "Draw": 372
-    },
-    "AI_Rando(X) vs. AI_Rando(O)": {
-        "X": 8829,
-        "O": 4221,
-        "Draw": 1950
+        "Draw": 0,
+        "Time": 0.191717
     }
 }
