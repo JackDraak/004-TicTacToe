@@ -2,26 +2,21 @@
     "AI_Jack(X) vs. AI_Jack(O)": {
         "X": 0,
         "O": 0,
-        "Draw": 1000
-    },
-    "AI_Jack(X) vs. AI_Rando(O)": {
-        "X": 970,
-        "O": 0,
-        "Draw": 30
+        "Draw": 10000
     },
     "AI_Rando(X) vs. AI_Jack(O)": {
-        "X": 13,
-        "O": 834,
-        "Draw": 153
+        "X": 118,
+        "O": 8453,
+        "Draw": 1429
+    },
+    "AI_Jack(X) vs. AI_Rando(O)": {
+        "X": 9628,
+        "O": 0,
+        "Draw": 372
     },
     "AI_Rando(X) vs. AI_Rando(O)": {
-        "X": 602,
-        "O": 287,
-        "Draw": 111
-    },
-    "AI_Jack(X) vs. AI_MCTS(O)": {
-        "X": 10,
-        "O": 0,
-        "Draw": 0
+        "X": 8829,
+        "O": 4221,
+        "Draw": 1950
     }
 }

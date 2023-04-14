@@ -1,6 +1,13 @@
 #   main.py - Tic-Tac-Toe game with 3 AI players and a console viewer (Human vs AI, or AI vs AI)
-#   AI_MCTS and AI_ML_template are WIP...
+#
+#   AI_Rando is a random AI player
+#   AI_MCTS (WIP) is a Monte Carlo Tree Search AI player
+#   AI_Jack is a minimax AI player
+#   AI_ML_template (WIP) is a template for a machine learning AI player: AI_ML_SVM, AI_ML_NN, or AI_ML_RL...
+#
 #   To demo, run this file in a terminal: python main.py
+#   To run the simulation, run this file in a terminal: python simulate.py
+#
 from players import Human, AI_Jack, AI_Rando, AI_MCTS
 from time import sleep
 from typing import List

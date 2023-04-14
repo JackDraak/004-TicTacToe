@@ -1,4 +1,4 @@
-# players.py 
+# players.py - BasePlayer, Human, AI_Jack, AI_MCTS, AI_Rando...
 import math
 import random
 
