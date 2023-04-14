@@ -62,14 +62,18 @@ class TicTacToeSimulator:
             result = game.play_game(x_player, o_player, viewer)
             self.results[result] += 1
         new_results = self.return_results(x_player_class, o_player_class)
-        print(new_results)
-        simulator.save_results_as_json(new_results)
+        print(new_results) # TODO print the results to the console, is this necessary?
+        simulator.save_results_as_json(x_player_class, o_player_class, new_results)
 
     def return_results(self, x_player_class, o_player_class):
-        return (f'Result: Player X ({x_player_class.__name__}) wins: {self.results["X"]}, ' + 
-              f'vs. Player O ({o_player_class.__name__}) wins: {self.results["O"]}, Draws: {self.results["Draw"]}')
+        return {
+            'matchup': f'Player X ({x_player_class.__name__}) vs. Player O ({o_player_class.__name__})',
+            'X': self.results['X'],
+            'O': self.results['O'],
+            'Draw': self.results['Draw']
+        }
 
-    def save_results_as_json(self, results):
+    def save_results_as_json(self, x_player_class, o_player_class, new_results):
         results_file = 'results.json'
         # First, if there are existing results in the json file, tabulate them
         try:
@@ -77,15 +81,16 @@ class TicTacToeSimulator:
                 existing_results = json.load(f) # existing_results is a dictionary
         except FileNotFoundError:
             existing_results = {}  # if there is no existing json file, create an empty dictionary
-        # Second, integrate the new results into the json file  
-        new_results = results.split(': ')
-        new_results = new_results[1].split(', ')
-        for result in new_results:
-            result = result.split(' ')
-            if result[0] in existing_results:
-                existing_results[result[0]] += int(result[1])
-            else:
-                existing_results[result[0]] = int(result[1])
+
+        # Second, integrate the new results into the json file
+        key = f"{x_player_class.__name__}(X) vs. {o_player_class.__name__}(O)"
+        if key not in existing_results:
+            existing_results[key] = {"X": 0, "O": 0, "Draw": 0}
+
+        existing_results[key]["X"] += self.results["X"]
+        existing_results[key]["O"] += self.results["O"]
+        existing_results[key]["Draw"] += self.results["Draw"]
+
         # Third, save the new results to the json file
         with open(results_file, 'w') as f:
             json.dump(existing_results, f, indent=4) # indent=4 for readability
