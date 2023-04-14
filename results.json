@@ -1,56 +1,56 @@
 {
-    "AI_Rando(X) vs. AI_Rando(O)": {
-        "X": 5825,
-        "O": 2885,
-        "Draw": 1290,
-        "Time": 0.000387
-    },
-    "AI_Rando(X) vs. AI_Jack(O)": {
-        "X": 115,
-        "O": 8473,
-        "Draw": 1412,
-        "Time": 0.000429
-    },
-    "AI_Rando(X) vs. AI_MCTS(O)": {
-        "X": 10,
-        "O": 0,
-        "Draw": 0,
-        "Time": 0.263983
-    },
-    "AI_MCTS(X) vs. AI_Rando(O)": {
-        "X": 1,
-        "O": 9,
-        "Draw": 0,
-        "Time": 0.337948
-    },
-    "AI_MCTS(X) vs. AI_Jack(O)": {
-        "X": 0,
-        "O": 10,
-        "Draw": 0,
-        "Time": 0.29974
-    },
-    "AI_MCTS(X) vs. AI_MCTS(O)": {
-        "X": 5,
-        "O": 0,
-        "Draw": 5,
-        "Time": 0.749766
-    },
-    "AI_Jack(X) vs. AI_Rando(O)": {
-        "X": 9633,
-        "O": 0,
-        "Draw": 367,
-        "Time": 0.000383
-    },
     "AI_Jack(X) vs. AI_Jack(O)": {
         "X": 0,
         "O": 0,
-        "Draw": 20104,
-        "Time": 0.001451
+        "Draw": 2000,
+        "Time": 0.000728
     },
     "AI_Jack(X) vs. AI_MCTS(O)": {
-        "X": 10,
+        "X": 2000,
         "O": 0,
         "Draw": 0,
-        "Time": 0.191717
+        "Time": 0.192645
+    },
+    "AI_Jack(X) vs. AI_Rando(O)": {
+        "X": 1932,
+        "O": 0,
+        "Draw": 68,
+        "Time": 0.000389
+    },
+    "AI_MCTS(X) vs. AI_Jack(O)": {
+        "X": 0,
+        "O": 2000,
+        "Draw": 0,
+        "Time": 0.306264
+    },
+    "AI_MCTS(X) vs. AI_MCTS(O)": {
+        "X": 1392,
+        "O": 0,
+        "Draw": 608,
+        "Time": 0.734851
+    },
+    "AI_MCTS(X) vs. AI_Rando(O)": {
+        "X": 105,
+        "O": 1650,
+        "Draw": 245,
+        "Time": 0.359196
+    },
+    "AI_Rando(X) vs. AI_Jack(O)": {
+        "X": 34,
+        "O": 1694,
+        "Draw": 272,
+        "Time": 0.000456
+    },
+    "AI_Rando(X) vs. AI_MCTS(O)": {
+        "X": 1988,
+        "O": 0,
+        "Draw": 12,
+        "Time": 0.277436
+    },
+    "AI_Rando(X) vs. AI_Rando(O)": {
+        "X": 1137,
+        "O": 596,
+        "Draw": 267,
+        "Time": 0.000406
     }
 }

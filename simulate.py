@@ -1,4 +1,5 @@
 # simulate.py is for running the simulation (interactively).
+import datetime
 import json 
 import main
 import players
@@ -15,12 +16,21 @@ class TicTacToeSimulator:
         }
         self.results = {'X': 0, 'O': 0, 'Draw': 0}
 
-    # run the simulation for each pairing of players N times        
+    # run the simulation for each pairing of players N times (incl A:A pairings)      
     def __call__(self, num_episodes):
         for player1 in self.player_classes.keys():
             for player2 in self.player_classes.keys():
-                self.simulate(self.player_classes[player1], self.player_classes[player2], num_episodes)
-        self.save_results_as_json()
+                # print the current player pairing with timestamp:
+                timestamp = datetime.datetime.now().strftime('%H:%M:%S:%f')[:-3]
+                print(f'{timestamp} Running {num_episodes} episodes of {player1} vs {player2}...')
+
+                time_begin = t()
+                new_results = self.simulate(self.player_classes[player1], self.player_classes[player2], num_episodes)
+                time_end = t()
+                time_elapsed = time_end - time_begin
+                avg_time_per_episode = time_elapsed / num_episodes
+                new_results['Time'] = round(avg_time_per_episode, 6)
+                self.save_results_as_json(self.player_classes[player1], self.player_classes[player2], new_results)
 
     def display_menu(self):
         print('Tic-Tac-Toe AI vs AI Simulator')

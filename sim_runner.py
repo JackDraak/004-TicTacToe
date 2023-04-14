@@ -2,14 +2,19 @@
 from simulate import TicTacToeSimulator
 from presenter import ResultsPresenter
 
+class BatchRunner:
+    def __init__(self):
+        self.simulator = TicTacToeSimulator()
+        self.presenter = ResultsPresenter()
+    
+    def __call__(self, episodes):  
+        self.simulator(episodes)
+        self.presenter()
+
+
 if __name__ == '__main__':
+    runner = BatchRunner()
     # get the number of episodes to run
     episodes = int(input(f'Enter the number of episodes to run: '))
-    
-    # run the simulation
-    simulator = TicTacToeSimulator()
-    simulator(episodes)
+    runner(episodes)
 
-    # display the results
-    presenter = ResultsPresenter()
-    presenter()
