@@ -114,13 +114,6 @@ class AI_MCTS(BasePlayer):
                 node = node.best_child(self.exploration_param)
         return node
 
-
-class AI_ML_template(BasePlayer):
-    def __call__(self, game):
-        # implement template for further AI_ML algorithms
-        # e.g. AI_ML_SVM, AI_ML_NN, AI_ML_RL, etc.
-        pass
-    
     
 class AI_Rando(BasePlayer):
     def __call__(self, game):
@@ -170,15 +163,25 @@ class Node:
         return best_child
 
     def rollout_policy(self, valid_moves):
-        return random.choice(valid_moves)
-    
+        score_matrix = self.game_state.score_matrix
+        best_moves = []
+        max_score = -1
+        for move in valid_moves:
+            x, y = self.game_state.get_cell_coords_by_label(move)
+            score = score_matrix[x][y]
+            if score > max_score:
+                max_score = score
+                best_moves = [move]
+            elif score == max_score:
+                best_moves.append(move)
+        return random.choice(best_moves)
+
     def rollout(self):
         current_rollout_state = self.game_state.copy()
         while not current_rollout_state.is_winner("X") and not current_rollout_state.is_winner("O") and not current_rollout_state.is_draw():
             possible_moves = current_rollout_state.get_valid_moves()
             action = self.rollout_policy(possible_moves)
-            current_rollout_state.move(action, current_rollout_state.current_player)
-        
+            current_rollout_state.move(action, current_rollout_state.current_player)        
         if current_rollout_state.is_winner(self.game_state.current_player):
             return 1
         elif current_rollout_state.is_winner("X" if self.game_state.current_player == "O" else "O"):

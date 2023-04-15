@@ -1,3 +1,6 @@
+stats*.md
+project*.md
+
 # Python artifacts
 __pycache__/
 *.pyc

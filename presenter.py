@@ -33,7 +33,7 @@ class ResultsPresenter:
             o_percent = "{:.1f}%".format((result['O'] / sum) * 100)
             draw_percent = "{:.1f}%".format((result['Draw'] / sum) * 100)
             w_l_draw = f"({result['X']:<5} - {result['O']:<5} - {result['Draw']:<5})"
-            average_time = "{:.5f}".format(result['Time']) # average_time = "{average_time:.3f}".format(result['Time'])
+            average_time = "{:.5f}".format(result['Time'])
             print("{:<30} {:^11} {:^11} {:^11} {:^11} {:^11} {:<5}".format(key + ":", x_percent, o_percent, draw_percent, sum, w_l_draw, average_time))
         print()
 

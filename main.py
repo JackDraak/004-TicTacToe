@@ -1,13 +1,5 @@
-#   main.py - Tic-Tac-Toe game with 3 AI players and a console viewer (Human vs AI, or AI vs AI)
-#
-#   AI_Rando is a random AI player
-#   AI_MCTS (WIP) is a Monte Carlo Tree Search AI player
-#   AI_Jack is a minimax AI player
-#   AI_ML_template (WIP) is a template for a machine learning AI player: AI_ML_SVM, AI_ML_NN, or AI_ML_RL...
-#
-#   To demo, run this file in a terminal: python main.py
-#   To run the simulation, run this file in a terminal: python simulate.py
-#
+#  main.py - Tic-Tac-Toe game Class for interactive play and simulation, 
+#  ostensibly for Machine Learning and statistical analysis.
 from players import Human, AI_Jack, AI_Rando, AI_MCTS
 from time import sleep
 from typing import List
@@ -211,13 +203,12 @@ class TicTacToeGame:
     
     def play_game(self, p1, p2, viewer) -> str:
         '''
-        The Tic-Tac-Toe game loop.
+        The Tic-Tac-Toe game loop: calls p1 and p2 for plays until a match concludes; returns outcome (X, O, Draw).
         '''
         if self.AI_ONLY_MODE:
             pause = TURN_PAUSE 
         else:
-            pause = 0
-                      
+            pause = 0                     
         turn = 0
         while turn < self.grid_size ** 2:
             if self.current_player == 'X': 
@@ -244,13 +235,11 @@ class TicTacToeGame:
                     viewer.message('Draw!')
                     conclusion = 'Draw'
             if self.is_winner('X') or self.is_winner('O') or self.is_draw():
-                break   
-                 
+                break          
         if not self.simulation:
             continue_playing = viewer.ask_to_continue()
             if not continue_playing:
                 self.quit_game()
-
         self.board = self._generate_board()
         self.current_player = 'X'    
         return conclusion
@@ -258,14 +247,8 @@ class TicTacToeGame:
     def quit_game(self) -> None:
         print("Quitting the game...")
         exit()
-        
-    def simulation_update(self, cell, player) -> None:
-        x, y = self.get_cell_coords_by_label(cell)
-        self.board[x][y] = player
-        self.current_player = 'X' if player == 'O' else 'O'
 
                     
-#  TODO once there are more Controllers, have __main__ allow for Controller selection(s) [also applies to Viewer]
 if __name__ == '__main__':
     #  Mostly as an excersize in making robust Python code, the grid can be any size, 
     #  but the strategies for larger boards do not improve, it only protracts the game.
@@ -276,8 +259,8 @@ if __name__ == '__main__':
     game = TicTacToeGame(GRID_SIZE, simulation=False)
     this_viewer = Console_Viewer(game)
     
-    AI_ONLY_MODE = False #  DEBUG: to allow for slowed-play while debugging
-    TURN_PAUSE = 0.05     #  DEBUG: to allow for slowed-play while debugging
+    AI_ONLY_MODE = False
+    TURN_PAUSE = 0.4 #  DEBUG?: to allow for slowed-play (i.e. execute main.py and run AI vs AI games)
     
     #  Menu & Game loop:
     while True:
@@ -298,24 +281,24 @@ if __name__ == '__main__':
         
         mode = input("Select a play mode or enter 'q' to quit: ")
         AI_ONLY_MODE = False
-        if bool(mode.strip() == '1'): #  play Human vs AI_Rando
+        if bool(mode.strip() == '1'):       #  play Human vs AI_Rando
             game.play_game(Human('Human', 'X', this_viewer, game), AI_Rando('AI_Rando', 'O', this_viewer, game), this_viewer) 
-        elif bool(mode.strip() == '2'):   #  play Human vs AI_MCTS
+        elif bool(mode.strip() == '2'):     #  play Human vs AI_MCTS
             game.play_game(Human('Human', 'X', this_viewer, game), AI_MCTS('AI_MCTS', 'O', this_viewer, game), this_viewer)
-        elif bool(mode.strip() == '3'): #  play Human vs AI_Jack
+        elif bool(mode.strip() == '3'):     #  play Human vs AI_Jack
             game.play_game(Human('Human', 'X', this_viewer, game), AI_Jack('AI_Jack', 'O', this_viewer, game), this_viewer)       
-        elif bool(mode.strip() == '4'): #  play AI_Jack vs Human
+        elif bool(mode.strip() == '4'):     #  play AI_Jack vs Human
             game.play_game(AI_Jack('AI_Jack', 'X', this_viewer, game), Human('Human', 'O', this_viewer, game), this_viewer) 
-        elif bool(mode.strip() == '5'): #  play AI_Rando vs AI_Jack
+        elif bool(mode.strip() == '5'):     #  play AI_Rando vs AI_Jack
             AI_ONLY_MODE = True
             game.play_game(AI_Rando('AI_Rando', 'X', this_viewer, game), AI_Jack('AI_Jack', 'O', this_viewer, game), this_viewer)       
-        elif bool(mode.strip() == '6'): #  play AI_MCTS vs AI_Jack
+        elif bool(mode.strip() == '6'):     #  play AI_MCTS vs AI_Jack
             AI_ONLY_MODE = True
             game.play_game(AI_MCTS('AI_MCTS', 'X', this_viewer, game), AI_Jack('AI_Jack', 'O', this_viewer, game), this_viewer)    
-        elif bool(mode.strip() == '7'): #  play AI_Jack vs AI_Rando
+        elif bool(mode.strip() == '7'):     #  play AI_Jack vs AI_Rando
             AI_ONLY_MODE = True
             game.play_game(AI_Jack('AI_Jack', 'X', this_viewer, game), AI_Rando('AI_Rando', 'O', this_viewer, game), this_viewer)   
-        elif bool(mode.strip() == '8'): #  play AI_Jack vs AI_MCTS 
+        elif bool(mode.strip() == '8'):     #  play AI_Jack vs AI_MCTS 
             AI_ONLY_MODE = True
             game.play_game(AI_Jack('AI_Jack', 'X', this_viewer, game), AI_MCTS('AI_MCTS', 'O', this_viewer, game), this_viewer)       
         elif bool(mode.strip().lower() == 'q'):

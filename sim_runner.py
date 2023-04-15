@@ -14,7 +14,5 @@ class BatchRunner:
 
 if __name__ == '__main__':
     runner = BatchRunner()
-    # get the number of episodes to run
     episodes = int(input(f'Enter the number of episodes to run: '))
     runner(episodes)
-

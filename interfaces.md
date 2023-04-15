@@ -35,8 +35,6 @@ main.py:    def message(self, msg) -> None:
 main.py:    def move(self, cell, player) -> bool:
 main.py:    def play_game(self, p1, p2, viewer) -> str:
 main.py:    def quit_game(self) -> None:
-main.py:    def simulation_update(self, cell, player) -> None:
-
 
 players.py:class BasePlayer:
 players.py:    def __init__(self, player_ID, player_symbol, viewer, game):
@@ -54,9 +52,6 @@ players.py:    def __init__(self, player_ID, player_symbol, viewer, game, explor
 players.py:    def __call__(self, game):
 players.py:    def tree_policy(self, node):
 
-players.py:class AI_ML_template(BasePlayer):
-players.py:    def __call__(self, game):
-
 players.py:class AI_Rando(BasePlayer):
 players.py:    def __call__(self, game):
 
@@ -72,16 +67,13 @@ players.py:    def rollout(self):
 players.py:    def expand(self):
 players.py:    def backpropagate(self, result):
 
-
-plotter.py:    def autolabel(rects):
-
+plotter.py:def autolabel(rects):
 
 presenter.py:class ResultsPresenter:
 presenter.py:    def __init__(self, results_file='results.json'):
 presenter.py:    def __call__(self):
 presenter.py:    def load_results(self):
 presenter.py:    def display_results(self):
-
 
 sim_runner.py:class BatchRunner:
 sim_runner.py:    def __init__(self):
@@ -93,8 +85,8 @@ simulate.py:    def __call__(self, num_episodes):
 simulate.py:    def display_menu(self):
 simulate.py:    def get_episodes(self, prompt):
 simulate.py:    def get_player_assignment(self, prompt):
-simulate.py:    def run_simulation(self):
 simulate.py:    def return_results(self, x_player_class, o_player_class, avg_time_per_episode):
-simulate.py:    def save_results_as_json(self, x_player_class, o_player_class, new_results):
 simulate.py:    def run_pairwise_simulations(self, num_episodes):
+simulate.py:    def run_simulation(self):
+simulate.py:    def save_results_as_json(self, x_player_class, o_player_class, new_results):
 simulate.py:    def simulate(self, x_class, o_class, num_episodes):
